@@ -49,4 +49,25 @@ class TodoController extends AbstractController
 		   //return 
 	   }
     }
+	
+	/**
+     * @Route("/update/{id}", name="update", methods={"PUT"})
+     */
+    public function update(Request $request, Todo $todo): Response
+    {
+		
+       $content = json_decode($request->getContent());
+	   
+	   $todo->setName($content->name);
+	   try{
+		   $em = $this->getDoctrine()->getManager();
+		   $em->persist($todo);
+		   $em->flush();
+		   return $this->json([
+				'message' => 'todo has been updated',
+		   ]);
+	   }catch(Exception $exception){
+		   //return 
+	   }
+    }
 }
