@@ -71,12 +71,15 @@ class TodoController extends AbstractController
 		   $em = $this->getDoctrine()->getManager();
 		   $em->persist($todo);
 		   $em->flush();
-		   return $this->json([
-				'message' => 'todo has been updated',
-		   ]);
+		   
 	   }catch(Exception $exception){
-		   //return 
+		   return $this->json([
+				'message' => ['text'=>['todo has do not updated'],'level' => 'error']
+		   ]); 
 	   }
+	   return $this->json([
+				'message' => ['text'=>['todo has been updated'],'level' => 'success']
+		   ]);
     }
 	/**
      * @Route("/delete/{id}", name="delete", methods={"DELETE"})
@@ -87,11 +90,14 @@ class TodoController extends AbstractController
 		   $em = $this->getDoctrine()->getManager();
 		   $em->remove($todo);
 		   $em->flush();
-		   return $this->json([
-				'message' => 'todo has been deleted',
-		   ]);
+		   
 	   }catch(Exception $exception){
-		   //return 
+		  return $this->json([
+				'message' => ['text'=>['todo has been updated'],'level' => 'error']
+		   ]);
 	   }
+	   return $this->json([
+				'message' => ['text'=>['todo has been deleted'],'level' => 'success']
+		   ]);
     }
 }

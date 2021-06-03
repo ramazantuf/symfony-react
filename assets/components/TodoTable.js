@@ -23,9 +23,21 @@ function TodoTable(){
 		const [editTodo,setEditTodo] = useState('');
 		const [DeleteConfirmationIsShown,setDeleteConfirmationIsShown] = useState(false);
 		const [todoToBeDeleted,setTodoToBeDeleted] = useState(null);
+		
+		const onCreateSubmit = (event) =>{
+			event.preventDefault();
+			context.createTodo(event,{name: addTodo});
+			setAddTodo('');
+		};
+		
+		const onEditSubmit = (todoId,event) => {
+			event.preventDefault();
+			context.updateTodo({id:todoId,name:editTodo});
+			setEditIsShown(false);
+		};
+		
 		return(
 			<Fragment>
-				<form onSubmit={(event)=>{context.createTodo(event,{name:addTodo})}}>
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -40,12 +52,14 @@ function TodoTable(){
 						<TableBody>
 							<TableRow>
 								<TableCell>
-									<TextField value={addTodo} onChange={(event)=>{
-										setAddTodo(event.target.value);
-										}} label="New Task" fullWidth={true}/>
+									<form onSubmit={onCreateSubmit}>
+										<TextField type="text" value={addTodo} onChange={(event)=>{
+											setAddTodo(event.target.value);
+											}} label="New Task" fullWidth={true}/>
+									</form>
 								</TableCell>
 								<TableCell align="right">
-									<IconButton type="submit">
+									<IconButton onClick={onCreateSubmit}>
 										<AddIcon/>
 									</IconButton>
 								</TableCell>
@@ -54,21 +68,24 @@ function TodoTable(){
 								<TableRow key={'todo '+index}>
 									<TableCell>
 										{editIsShown === todo.id ?
+										<form onSubmit={onEditSubmit.bind(this,todo.id)}>
 											<TextField 
+												type="text"
 												fullWidth={true}
+												autoFocus={true}
 												value={editTodo} 
 												onChange={(event)=>{
-												setEditTodo(event.target.value);
+													setEditTodo(event.target.value);
 												}}
 												InputProps={{
 													endAdornment: <Fragment>
 															<IconButton onClick={()=>{setEditIsShown(false);}}><CloseIcon/></IconButton>
-															<IconButton onClick={()=>{context.updateTodo({id:todo.id,name:editTodo});
-																setEditIsShown(false);
-															}}><DoneIcon/></IconButton>
+															<IconButton onClick={onEditSubmit.bind(this,todo.id)}
+																type="submit"><DoneIcon/></IconButton>
 														</Fragment>,
 												}}
 												/>
+											</form>
 											:
 											todo.name
 											}
@@ -90,7 +107,6 @@ function TodoTable(){
 							
 						</TableBody>
 					</Table>
-				</form>
 				{DeleteConfirmationIsShown && (
 				<DeleteDialog todo={todoToBeDeleted} open={DeleteConfirmationIsShown} setDeleteConfirmationIsShown={setDeleteConfirmationIsShown}/>
 				)}

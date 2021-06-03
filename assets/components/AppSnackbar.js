@@ -18,14 +18,10 @@ function checkLevel(level) {
 function AppSnackbar() {
     const context = useContext(TodoContext);
     return (
-        <Snackbar autoHideDuration={6000} open={context.message.text !== undefined}>
+        <Snackbar autoHideDuration={600} open={context.message.text !== undefined}>
             {context.message.text && (
-                <SnackbarContent style={{backgroundColor: checkLevel(context.message.level)}} message={context.message.text.map((text,index)=>(
-					<Fragment key={index+' '+text}>
-						<span>{text}</span>
-						<br/>
-					</Fragment>
-				))}
+                <SnackbarContent style={{backgroundColor: checkLevel(context.message.level)}} 
+					message={context.message.text}
 					action={[
 						<Button onClick={()=>{context.setMessage({})}} key='dismiss' color='inherit'>dismiss</Button>,
 					]}
