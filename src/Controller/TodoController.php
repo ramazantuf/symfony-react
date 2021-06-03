@@ -65,8 +65,13 @@ class TodoController extends AbstractController
     {
 		
        $content = json_decode($request->getContent());
-	   
+	   if($todo->getname() === $content->name && $todo->getDescription() === $content->description){
+		   return $this->json([
+				'message' => ['text'=>['There was no change to the to-do'],'level' => 'error']
+		   ]); 
+	   }
 	   $todo->setName($content->name);
+	   $todo->setDescription($content->description);
 	   try{
 		   $em = $this->getDoctrine()->getManager();
 		   $em->persist($todo);
@@ -78,6 +83,7 @@ class TodoController extends AbstractController
 		   ]); 
 	   }
 	   return $this->json([
+				'todo' => $todo->toArray(),
 				'message' => ['text'=>['todo has been updated'],'level' => 'success']
 		   ]);
     }
