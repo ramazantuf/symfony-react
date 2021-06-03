@@ -8,8 +8,8 @@ class TodoContextProvider extends React.Component
 		super(props);
 		this.state = {
 			todos:[
-				{name:'Merhaba Dunyalı'},
-				{name:'Merhaba Dunyalı'},
+				{id:1,name:'Merhaba Dunyalı'},
+				{id:2,name:'Merhaba Dunyalı'},
 			],
 		};
 	}
@@ -30,8 +30,13 @@ class TodoContextProvider extends React.Component
 	}
 	
 	//update
-	updateTodo(){
-		
+	updateTodo(data){
+		let todos = [...this.state.todos];
+		let todo = todos.find(todo=>{
+			return todo.id === data.id;
+		});
+		todo.name = data.name;
+		this.setState({todos:todos,});
 	}
 	//delete
 	deleteTodo(){
